@@ -6,5 +6,6 @@ data class IMCData(
     val imcValue: Double,
     val bmr: Int? = null,
     val idealWeight: String? = null,
-    val dailyCaloricNeed: Int? = null
+    val dailyCaloricNeed: Int? = null,
+    val bodyFat: Float?
 )

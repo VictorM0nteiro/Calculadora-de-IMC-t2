@@ -35,4 +35,12 @@ sealed class MetricCardData(
         value = value,
         color = YellowColor
     )
+
+    data class BodyFat(override val value: Float) : MetricCardData(
+        title = "Gordura Corporal",
+        unitMeasure = "%",
+        icon = IconUse.Painter(R.drawable.ic_body_fat),
+        value = value,
+        color = YellowColor
+    )
 }

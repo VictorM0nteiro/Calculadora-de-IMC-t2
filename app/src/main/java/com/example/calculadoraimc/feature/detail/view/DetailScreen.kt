@@ -33,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -65,6 +66,7 @@ import com.example.calculadoraimc.ui.theme.TextSecondary
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +76,8 @@ fun DetailScreen(
 ) {
     val details by viewModel.details.collectAsState()
     val formatter = SimpleDateFormat("dd MMM yyyy • HH:mm", Locale("pt", "BR"))
+    val backgroundColor = MaterialTheme.colorScheme.background
+
 
     Scaffold(
         topBar = {
@@ -81,7 +85,6 @@ fun DetailScreen(
                 title = {
                     Text(
                         details?.let { formatter.format(it.date) } ?: "Carregando...",
-                        color = TextOnPrimary,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
                     )
@@ -90,18 +93,19 @@ fun DetailScreen(
                     IconButton(
                         onClick = onBack,
                         colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = Color.White.copy(alpha = 0.15f)
+                            containerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f)
                         )
                     ) {
                         Icon(
                             Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Voltar",
-                            tint = TextOnPrimary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 modifier = Modifier.statusBarsPadding()
             )
@@ -116,10 +120,8 @@ fun DetailScreen(
                         colors = listOf(
                             GradientStart,
                             GradientEnd,
-                            BackgroundLight
-                        ),
-                        startY = 0f,
-                        endY = 400f
+                            backgroundColor
+                        )
                     )
                 )
         ) {
@@ -135,7 +137,9 @@ fun DetailScreen(
 
                 details?.let {
                     DetailContent(history = it)
-                } ?: CircularProgressIndicator(color = Color.White)
+                } ?: CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
             }
@@ -162,7 +166,9 @@ fun DetailContent(history: IMCHistory) {
                 ambientColor = AccentColor.copy(alpha = 0.15f)
             ),
         shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
@@ -191,7 +197,7 @@ fun DetailContent(history: IMCHistory) {
                     text = "Índice de Massa Corporal",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = TextSecondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -202,7 +208,7 @@ fun DetailContent(history: IMCHistory) {
                 text = String.format("%.1f", history.imc),
                 fontSize = 72.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             // Classificação com badge colorido
@@ -265,7 +271,9 @@ fun DetailContent(history: IMCHistory) {
                     ambientColor = Color.Black.copy(alpha = 0.05f)
                 ),
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Row(
                 modifier = Modifier
@@ -294,13 +302,13 @@ fun DetailContent(history: IMCHistory) {
                     Text(
                         text = "Peso Ideal",
                         fontSize = 13.sp,
-                        color = TextSecondary
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = it,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -319,7 +327,9 @@ fun DetailContent(history: IMCHistory) {
                 ambientColor = Color.Black.copy(alpha = 0.05f)
             ),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(
@@ -344,7 +354,7 @@ fun DetailContent(history: IMCHistory) {
                     text = "Dados da Medição",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -375,7 +385,9 @@ private fun MetricDetailCard(
                 ambientColor = Color.Black.copy(alpha = 0.05f)
             ),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -400,7 +412,7 @@ private fun MetricDetailCard(
             Text(
                 text = label,
                 fontSize = 13.sp,
-                color = TextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -409,13 +421,13 @@ private fun MetricDetailCard(
                 text = value,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
                 text = unit,
                 fontSize = 12.sp,
-                color = TextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -432,13 +444,13 @@ private fun InfoRow(label: String, value: String) {
         Text(
             text = label,
             fontSize = 14.sp,
-            color = TextSecondary
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = value,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = TextPrimary
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

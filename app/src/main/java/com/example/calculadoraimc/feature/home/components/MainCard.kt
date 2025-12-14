@@ -47,6 +47,11 @@ import com.example.calculadoraimc.ui.theme.GradientStart
 import com.example.calculadoraimc.ui.theme.TextPrimary
 import com.example.calculadoraimc.ui.theme.TextSecondary
 
+/**
+ * Gemini - início
+ * Prompt:
+ * Passe todos os componentes para ser dinamico e utilizar os themes light e dark
+ */
 @Composable
 fun MainCard(result: IMCData) {
     Card(
@@ -84,13 +89,13 @@ fun MainCard(result: IMCData) {
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.2f)),
+                            .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.MonitorHeart,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(22.dp)
                         )
                     }
@@ -98,7 +103,7 @@ fun MainCard(result: IMCData) {
                         text = "Seu IMC",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color.White.copy(alpha = 0.9f)
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.9f)
                     )
                 }
 
@@ -116,7 +121,7 @@ fun MainCard(result: IMCData) {
                             text = result.imc,
                             fontSize = 64.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -124,14 +129,14 @@ fun MainCard(result: IMCData) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(20.dp))
-                                .background(Color.White.copy(alpha = 0.2f))
+                                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f))
                                 .padding(horizontal = 14.dp, vertical = 6.dp)
                         ) {
                             Text(
                                 text = result.classification,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }
@@ -150,7 +155,7 @@ fun MainCard(result: IMCData) {
                     Spacer(modifier = Modifier.height(24.dp))
 
                     HorizontalDivider(
-                        color = Color.White.copy(alpha = 0.2f),
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f),
                         thickness = 1.dp
                     )
 
@@ -186,6 +191,15 @@ fun MainCard(result: IMCData) {
                                 unit = "kcal/dia"
                             )
                         }
+
+                        result.bodyFat?.let { bf ->
+                            MetricRow(
+                                icon = Icons.Rounded.FavoriteBorder,
+                                label = "Percentual de Gordura",
+                                value = "%.1f".format(bf),
+                                unit = "%"
+                            )
+                        }
                     }
                 }
             }
@@ -208,13 +222,14 @@ private fun MetricRow(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = 0.15f)),
+                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onPrimary
+,
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -225,7 +240,7 @@ private fun MetricRow(
             Text(
                 text = label,
                 fontSize = 12.sp,
-                color = Color.White.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
             )
             Row(
                 verticalAlignment = Alignment.Bottom
@@ -234,14 +249,14 @@ private fun MetricRow(
                     text = value,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
                 if (unit.isNotEmpty()) {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = unit,
                         fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f),
                         modifier = Modifier.padding(bottom = 2.dp)
                     )
                 }
@@ -263,9 +278,14 @@ private fun MainCardPreview() {
                     imcValue = 24.5,
                     bmr = 1650,
                     idealWeight = "65.0 - 79.5 kg",
-                    dailyCaloricNeed = 2269
+                    dailyCaloricNeed = 2269,
+                    bodyFat = 18.5f
                 )
             )
         }
     }
 }
+
+/**
+ * Gemini - fim
+ */

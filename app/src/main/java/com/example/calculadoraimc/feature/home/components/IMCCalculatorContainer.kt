@@ -19,6 +19,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -63,23 +64,28 @@ fun IMCCalculatorContainer(
     onGenderSelected: (Gender) -> Unit,
     activityLevel: ActivityLevel?,
     onActivityLevelSelected: (ActivityLevel) -> Unit,
+    waist: String,
+    onWaistChange: (String) -> Unit,
+    neck: String,
+    onNeckChange: (String) -> Unit,
+    hip: String,
+    onHipChange: (String) -> Unit,
     validationState: ValidationState,
     onCalculate: () -> Unit
 ) {
     var isDropdownExpanded by remember { mutableStateOf(false) }
 
-    // Card com efeito glassmorphism
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(
                 elevation = 20.dp,
                 shape = RoundedCornerShape(28.dp),
-                ambientColor = AccentColor.copy(alpha = 0.1f),
-                spotColor = AccentColor.copy(alpha = 0.15f)
+                ambientColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                spotColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
             )
             .clip(RoundedCornerShape(28.dp))
-            .background(Color.White.copy(alpha = 0.95f))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(24.dp)
     ) {
         Column {
@@ -88,7 +94,7 @@ fun IMCCalculatorContainer(
                 text = "Seus dados",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = TextPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(Modifier.height(20.dp))
@@ -136,7 +142,7 @@ fun IMCCalculatorContainer(
                 text = "Sexo biológico",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = TextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(Modifier.height(8.dp))
@@ -148,7 +154,7 @@ fun IMCCalculatorContainer(
                         if (validationState.genderError) {
                             Modifier.border(
                                 width = 1.dp,
-                                color = Color(0xFFEF4444),
+                                color = MaterialTheme.colorScheme.error,
                                 shape = RoundedCornerShape(16.dp)
                             )
                         } else Modifier
@@ -176,7 +182,7 @@ fun IMCCalculatorContainer(
                 text = "Nível de atividade física",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = TextSecondary
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(Modifier.height(8.dp))
@@ -195,17 +201,21 @@ fun IMCCalculatorContainer(
                     placeholder = {
                         Text(
                             "Selecione seu nível",
-                            color = TextSecondary.copy(alpha = 0.6f)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isDropdownExpanded) },
                     shape = RoundedCornerShape(16.dp),
                     isError = validationState.activityLevelError,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AccentColor,
-                        unfocusedBorderColor = Color(0xFFE2E8F0),
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color(0xFFF8FAFC)
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        errorBorderColor = MaterialTheme.colorScheme.error,
+                        errorContainerColor = MaterialTheme.colorScheme.errorContainer,
+                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
                 ExposedDropdownMenu(
@@ -222,6 +232,56 @@ fun IMCCalculatorContainer(
                         )
                     }
                 }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            Text(
+                text = "Medidas corporais",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                ModernTextField(
+                    modifier = Modifier.weight(1f),
+                    value = waist,
+                    onValueChange = onWaistChange,
+                    label = "Cintura",
+                    placeholder = "cm",
+                    isError = false,
+                    keyboardType = KeyboardType.Decimal
+                )
+
+                ModernTextField(
+                    modifier = Modifier.weight(1f),
+                    value = neck,
+                    onValueChange = onNeckChange,
+                    label = "Pescoço",
+                    placeholder = "cm",
+                    isError = false,
+                    keyboardType = KeyboardType.Decimal
+                )
+            }
+
+            if (gender == Gender.FEMALE) {
+                Spacer(Modifier.height(16.dp))
+
+                ModernTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = hip,
+                    onValueChange = onHipChange,
+                    label = "Quadril",
+                    placeholder = "cm",
+                    isError = false,
+                    keyboardType = KeyboardType.Decimal
+                )
             }
 
             Spacer(Modifier.height(28.dp))
@@ -254,7 +314,7 @@ fun IMCCalculatorContainer(
                         text = "Calcular",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -277,7 +337,7 @@ private fun ModernTextField(
             text = label,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = TextSecondary
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
@@ -287,7 +347,7 @@ private fun ModernTextField(
             placeholder = {
                 Text(
                     placeholder,
-                    color = TextSecondary.copy(alpha = 0.5f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 )
             },
             shape = RoundedCornerShape(14.dp),
@@ -295,12 +355,12 @@ private fun ModernTextField(
             isError = isError,
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = AccentColor,
-                unfocusedBorderColor = Color(0xFFE2E8F0),
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color(0xFFF8FAFC),
-                errorBorderColor = Color(0xFFEF4444),
-                errorContainerColor = Color(0xFFFEF2F2)
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             )
         )
     }
@@ -314,11 +374,17 @@ private fun GenderButton(
     onClick: () -> Unit
 ) {
     val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) AccentColor else Color(0xFFF1F5F9),
+        targetValue = if (isSelected)
+            MaterialTheme.colorScheme.primary
+        else
+            MaterialTheme.colorScheme.surfaceVariant,
         label = "backgroundColor"
     )
     val contentColor by animateColorAsState(
-        targetValue = if (isSelected) Color.White else TextSecondary,
+        targetValue = if (isSelected)
+            MaterialTheme.colorScheme.onPrimary
+        else
+            MaterialTheme.colorScheme.onSurfaceVariant,
         label = "contentColor"
     )
 
@@ -350,6 +416,9 @@ private fun IMCCalculatorContainerPreview() {
         var age by remember { mutableStateOf("") }
         var gender by remember { mutableStateOf<Gender?>(null) }
         var activityLevel by remember { mutableStateOf<ActivityLevel?>(null) }
+        var waist by remember { mutableStateOf("") }
+        var neck by remember { mutableStateOf("") }
+        var hip by remember { mutableStateOf("") }
 
         IMCCalculatorContainer(
             height = height, onHeightChange = { height = it },
@@ -358,6 +427,12 @@ private fun IMCCalculatorContainerPreview() {
             gender = gender, onGenderSelected = { gender = it },
             activityLevel = activityLevel, onActivityLevelSelected = { activityLevel = it },
             validationState = ValidationState(),
+            waist = waist,
+            onWaistChange = { waist = it },
+            neck = neck,
+            onNeckChange = { neck = it },
+            hip = hip,
+            onHipChange = { hip = it },
             onCalculate = {}
         )
     }

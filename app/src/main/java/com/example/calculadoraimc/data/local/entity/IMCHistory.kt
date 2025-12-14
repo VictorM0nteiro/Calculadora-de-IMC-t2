@@ -18,5 +18,6 @@ data class IMCHistory(
     val gender: Gender?,
     val bmr: Int?,
     val idealWeight: String?,
-    val dailyCaloricNeed: Int?
+    val dailyCaloricNeed: Int?,
+    val bodyFat: Float?
 )
