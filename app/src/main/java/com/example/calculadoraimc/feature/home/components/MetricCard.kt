@@ -35,6 +35,12 @@ import com.example.calculadoraimc.ui.theme.TextPrimary
 import com.example.calculadoraimc.ui.theme.TextSecondary
 import com.example.calculadoraimc.ui.theme.YellowColorDark
 
+
+/**
+ * Gemini - início
+ * Prompt:
+ * Passe todos os componentes para ser dinamico e utilizar os themes light e dark
+ */
 @Composable
 fun MetricCard(
     modifier: Modifier = Modifier,
@@ -44,11 +50,13 @@ fun MetricCard(
     val valueCard = when (metrics) {
         is MetricCardData.Height -> (metrics.value / 100)
         is MetricCardData.Weight -> metrics.value
+        is MetricCardData.BodyFat -> metrics.value
     }
 
     val iconTint = when (metrics) {
         is MetricCardData.Height -> GreenColorDark
         is MetricCardData.Weight -> YellowColorDark
+        is MetricCardData.BodyFat -> Color(0xFFFFA500)
     }
 
     Card(
@@ -56,11 +64,10 @@ fun MetricCard(
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(20.dp),
-                ambientColor = Color.Black.copy(alpha = 0.05f)
-            ),
+                ambientColor = AccentColor.copy(alpha = 0.15f)            ),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
@@ -76,7 +83,7 @@ fun MetricCard(
                 Text(
                     text = metrics.title,
                     fontSize = 14.sp,
-                    color = TextSecondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Box(
@@ -105,7 +112,7 @@ fun MetricCard(
                     text = valueCard.toString(),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Spacer(Modifier.width(4.dp))
@@ -114,12 +121,13 @@ fun MetricCard(
                     text = metrics.unitMeasure,
                     modifier = Modifier.padding(bottom = 6.dp),
                     fontSize = 14.sp,
-                    color = TextSecondary
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -142,3 +150,17 @@ private fun MetricCardPreview() {
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun BodyFatCardPreview() {
+    CalculadoraIMCTheme {
+        MetricCard(
+            metrics = MetricCardData.BodyFat(21.5f)
+        )
+    }
+}
+
+/**
+ * Gemini - fim
+ */

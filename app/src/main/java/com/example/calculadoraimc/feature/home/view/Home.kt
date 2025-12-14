@@ -36,21 +36,27 @@ import androidx.compose.ui.unit.sp
 import com.example.calculadoraimc.feature.home.components.IMCCalculatorContainer
 import com.example.calculadoraimc.feature.home.model.IMCData
 import com.example.calculadoraimc.feature.home.viewmodel.HomeViewModel
-import com.example.calculadoraimc.ui.theme.AccentColor
-import com.example.calculadoraimc.ui.theme.AccentLight
-import com.example.calculadoraimc.ui.theme.BackgroundLight
 import com.example.calculadoraimc.ui.theme.CalculadoraIMCTheme
-import com.example.calculadoraimc.ui.theme.GradientEnd
-import com.example.calculadoraimc.ui.theme.GradientStart
-import com.example.calculadoraimc.ui.theme.TextOnPrimary
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material3.MaterialTheme
+
+
+/**
+ * Gemini - início
+ * Prompt:
+ * Passe todos os componentes para ser dinamico e utilizar os themes light e dark
+ */
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Home(
     viewModel: HomeViewModel,
     onNavigateToHistory: () -> Unit,
-    onNavigateToHelp: () -> Unit
+    onNavigateToHelp: () -> Unit,
+    onToggleTheme: () -> Unit
 ) {
+    val colors = MaterialTheme.colorScheme
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -58,41 +64,50 @@ fun Home(
                     Column {
                         Text(
                             text = "Calculadora",
-                            color = TextOnPrimary,
+                            color = colors.onPrimary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal
                         )
                         Text(
                             text = "IMC & Saúde",
-                            color = TextOnPrimary,
+                            color = colors.onPrimary,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 },
                 actions = {
+                    IconButton(onClick = onToggleTheme) {
+                        Icon(
+                            imageVector = Icons.Default.DarkMode,
+                            contentDescription = "Alternar tema",
+                            tint = colors.onPrimary
+                        )
+                    }
+
                     IconButton(
                         onClick = onNavigateToHistory,
                         colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = Color.White.copy(alpha = 0.15f)
+                            containerColor = colors.onPrimary.copy(alpha = 0.15f)
                         )
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.History,
                             contentDescription = "Histórico",
-                            tint = TextOnPrimary
+                            tint = colors.onPrimary
                         )
                     }
+
                     IconButton(
                         onClick = onNavigateToHelp,
                         colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = Color.White.copy(alpha = 0.15f)
+                            containerColor = colors.onPrimary.copy(alpha = 0.15f)
                         )
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.HelpOutline,
                             contentDescription = "Ajuda",
-                            tint = TextOnPrimary
+                            tint = colors.onPrimary
                         )
                     }
                 },
@@ -110,12 +125,10 @@ fun Home(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            GradientStart,
-                            GradientEnd,
-                            BackgroundLight
-                        ),
-                        startY = 0f,
-                        endY = 600f
+                            colors.primary,
+                            colors.secondary,
+                            colors.background
+                        )
                     )
                 )
         ) {
@@ -139,6 +152,12 @@ fun Home(
                     onGenderSelected = viewModel::onGenderSelected,
                     activityLevel = viewModel.activityLevel,
                     onActivityLevelSelected = viewModel::onActivityLevelSelected,
+                    waist = viewModel.waist,
+                    onWaistChange = viewModel::onWaistChange,
+                    neck = viewModel.neck,
+                    onNeckChange = viewModel::onNeckChange,
+                    hip = viewModel.hip,
+                    onHipChange = viewModel::onHipChange,
                     validationState = viewModel.validationState,
                     onCalculate = viewModel::calculate
                 )
@@ -170,3 +189,7 @@ private fun HomePreview() {
         // A preview está quebrada porque Home requer um ViewModel que não pode ser instanciado aqui.
     }
 }
+
+/**
+ * Gemini - fim
+ */

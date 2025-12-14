@@ -149,6 +149,31 @@ fun HelpScreen(onBack: () -> Unit) {
                     formula = "Necessidade = TMB × Fator de Atividade",
                     description = "Estima o total de calorias que você deve consumir por dia para manter seu peso atual, com base no seu nível de atividade física.\n\nOs fatores variam de 1.2 (sedentário) a 1.9 (extremamente ativo)."
                 )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HelpCard(
+                    icon = Icons.Rounded.Balance,
+                    iconColor = Color(0xFF3B82F6),
+                    title = "Percentual de Gordura Corporal",
+                    formula = "Fórmula da Marinha dos EUA (US Navy)",
+                    description = """
+                        O percentual de gordura corporal é uma estimativa da proporção de gordura em relação ao peso total do corpo.
+                        
+                        Este aplicativo utiliza a fórmula da Marinha dos Estados Unidos (US Navy), que se baseia em medidas antropométricas simples e apresenta boa precisão para uso geral.
+                        
+                        ♂ Homens:
+                        % Gordura = 86.010 × log10(cintura − pescoço)
+                                    − 70.041 × log10(altura)
+                                    + 36.76
+                        
+                        ♀ Mulheres:
+                        % Gordura = 163.205 × log10(cintura + quadril − pescoço)
+                                    − 97.684 × log10(altura)
+                                    − 78.387
+                        
+                        As medidas devem ser informadas em centímetros. Para mulheres, a medida do quadril é necessária devido às diferenças fisiológicas na distribuição de gordura corporal.
+                        """.trimIndent()
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
             }

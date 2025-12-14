@@ -5,7 +5,16 @@ import com.example.calculadoraimc.feature.home.model.ActivityLevel
 import com.example.calculadoraimc.feature.home.model.Gender
 import com.example.calculadoraimc.feature.home.model.IMCData
 import kotlin.math.roundToInt
+import kotlin.math.log10
 
+/**
+ * Claude - início
+ * Prompt:
+ * Estou desenvolvendo um aplicativo Android em Kotlin usando Jetpack Compose e arquitetura MVVM.
+ * Preciso criar uma classe utilitária para fazer os calculos de indicadores de saúde.
+ * Gere funcoes para calculo de IMC, levando em consideraçao altura, peso, idade e crie uma classificacao de: abaixo do peso, normal, sobrepeso, obesidade grau 1,2 e 3
+ *
+ */
 object Calculations {
 
     @SuppressLint("DefaultLocale")
@@ -14,7 +23,7 @@ object Calculations {
         val weightValue = weight.toDoubleOrNull()
 
         if (heightValue == null || weightValue == null || heightValue <= 0 || weightValue <= 0) {
-            response(IMCData(imc = "---", classification = "Valores inválidos", imcValue = 0.0))
+            response(IMCData(imc = "---", classification = "Valores inválidos", imcValue = 0.0, bodyFat = null))
             return
         }
 
@@ -31,9 +40,18 @@ object Calculations {
             else -> "Obesidade Grau III"
         }
 
-        response(IMCData(imcFormatted, imcClassification, imc))
+        response(IMCData(imcFormatted, imcClassification, imc, bodyFat = null))
     }
 
+    /**
+     * Gemini - início
+     * Prompt:
+     * Estou desenvolvendo um aplicativo Android em Kotlin usando Jetpack Compose e arquitetura MVVM.
+     * Preciso criar uma função para calcular a Taxa Metabólica Basal
+     * Leve em consideração sexo (masculino ou feminino), idade, peso e altura.
+     * A função deve retornar o valor da TMB como um número inteiro
+     * Explique a fórmula utilizada em comentários
+     */
     /**
      * Calcula a Taxa Metabólica Basal (TMB) usando a fórmula de Mifflin-St Jeor.
      * Fórmula para homens: (10 * peso em kg) + (6.25 * altura em cm) - (5 * idade em anos) + 5
@@ -47,6 +65,20 @@ object Calculations {
             (bmr - 161).roundToInt()
         }
     }
+
+    /**
+     * Gemini - fim
+     */
+
+    /**
+     * Gemini - início
+     * Prompt:
+     *  * Preciso criar uma função para estimar a necessidade calórica diária.
+     *  * O cálculo deve ser baseado na TMB multiplicada por um fator de atividade física.
+     *  * Considere níveis de atividade como sedentário, leve, moderado e intenso.
+     *  Alem disso,  Preciso criar uma função para calcular o peso ideal de uma pessoa.
+     *  * Leve em consideração o sexo masculino ou feminino e a altura
+     */
 
     /**
      * Calcula o Peso Ideal usando a Fórmula de Devine.
@@ -79,4 +111,41 @@ object Calculations {
     fun calculateDailyCaloricNeed(bmr: Int, activityLevel: ActivityLevel): Int {
         return (bmr * activityLevel.factor).roundToInt()
     }
+
+    /**
+     * Gemini - fim
+     */
+    @SuppressLint("DefaultLocale")
+    fun calculateBodyFat(
+        gender: Gender,
+        height: Int,
+        waist: Double,
+        neck: Double,
+        hip: Double? = null
+    ): Float {
+        // Calcula o valor para o logaritmo
+        val bodyFatValue = when (gender) {
+            Gender.MALE -> {
+                val waistNeck = waist - neck
+                if (waistNeck <= 0) {
+                    return Float.NaN
+                }
+                86.010 * log10(waistNeck) - 70.041 * log10(height.toDouble()) + 36.76
+            }
+            Gender.FEMALE -> {
+                requireNotNull(hip) { "Quadril obrigatório para mulheres" }
+                val waistHipNeck = waist + hip - neck
+                if (waistHipNeck <= 0) {
+                    return Float.NaN
+                }
+                163.205 * log10(waistHipNeck) - 97.684 * log10(height.toDouble()) - 78.387
+            }
+        }
+
+        // Retorna o valor calculado como Float
+        return bodyFatValue.toFloat()
+    }
 }
+/**
+ * Claude - Fim
+ */

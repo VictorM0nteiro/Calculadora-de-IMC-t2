@@ -19,21 +19,33 @@ import com.example.calculadoraimc.feature.history.viewmodel.HistoryViewModelFact
 import com.example.calculadoraimc.feature.home.view.Home
 import com.example.calculadoraimc.feature.home.viewmodel.HomeViewModelFactory
 import com.example.calculadoraimc.ui.theme.CalculadoraIMCTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CalculadoraIMCTheme {
-                AppNavigation()
+            var isDarkTheme by rememberSaveable {
+                mutableStateOf(false)
+            }
+
+            CalculadoraIMCTheme(darkTheme = isDarkTheme) {
+                AppNavigation(
+                    onToggleTheme = { isDarkTheme = !isDarkTheme }
+                )
             }
         }
     }
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    onToggleTheme: () -> Unit
+) {
     val navController = rememberNavController()
     val application = navController.context.applicationContext as IMCApplication
     val repository = application.repository
@@ -43,7 +55,8 @@ fun AppNavigation() {
             Home(
                 viewModel = viewModel(factory = HomeViewModelFactory(repository)),
                 onNavigateToHistory = { navController.navigate("history") },
-                onNavigateToHelp = { navController.navigate("help") }
+                onNavigateToHelp = { navController.navigate("help") },
+                onToggleTheme = onToggleTheme
             )
         }
         composable("history") {

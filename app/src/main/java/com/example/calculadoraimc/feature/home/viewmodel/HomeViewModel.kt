@@ -23,68 +23,55 @@ data class ValidationState(
 )
 
 class HomeViewModel(private val repository: IMCHistoryRepository) : ViewModel() {
+
     var height by mutableStateOf("")
         private set
-
     var weight by mutableStateOf("")
         private set
-
     var age by mutableStateOf("")
         private set
-
     var gender by mutableStateOf<Gender?>(null)
         private set
-
+    var waist by mutableStateOf("")
+        private set
+    var neck by mutableStateOf("")
+        private set
+    var hip by mutableStateOf("")
+        private set
     var activityLevel by mutableStateOf<ActivityLevel?>(null)
         private set
-
     var resultIMC by mutableStateOf<IMCData?>(null)
         private set
-
     var validationState by mutableStateOf(ValidationState())
         private set
 
-    fun onHeightChange(newHeight: String) {
-        if (newHeight.length <= 3) {
-            height = newHeight
-            validationState = validationState.copy(heightError = false)
-        }
-    }
+    // Funções de input
+    fun onHeightChange(value: String) { if (value.length <= 3) { height = value; validationState = validationState.copy(heightError = false) } }
+    fun onWeightChange(value: String) { if (value.length <= 7) { weight = value; validationState = validationState.copy(weightError = false) } }
+    fun onAgeChange(value: String) { if (value.length <= 3) { age = value; validationState = validationState.copy(ageError = false) } }
+    fun onGenderSelected(value: Gender) { gender = value; validationState = validationState.copy(genderError = false) }
+    fun onActivityLevelSelected(value: ActivityLevel) { activityLevel = value; validationState = validationState.copy(activityLevelError = false) }
+    fun onWaistChange(value: String) { waist = value }
+    fun onNeckChange(value: String) { neck = value }
+    fun onHipChange(value: String) { hip = value }
 
-    fun onWeightChange(newWeight: String) {
-        if (newWeight.length <= 7) {
-            weight = newWeight
-            validationState = validationState.copy(weightError = false)
-        }
-    }
-
-    fun onAgeChange(newAge: String) {
-        if (newAge.length <= 3) {
-            age = newAge
-            validationState = validationState.copy(ageError = false)
-        }
-    }
-
-    fun onGenderSelected(selectedGender: Gender) {
-        gender = selectedGender
-        validationState = validationState.copy(genderError = false)
-    }
-
-    fun onActivityLevelSelected(level: ActivityLevel) {
-        activityLevel = level
-        validationState = validationState.copy(activityLevelError = false)
-    }
-
+    // Função de cálculo principal
     fun calculate() {
-        val heightValue = height.toIntOrNull()
-        val weightValue = weight.toDoubleOrNull()
-        val ageValue = age.toIntOrNull()
+        val h = height.toIntOrNull()
+        val w = weight.toDoubleOrNull()
+        val a = age.toIntOrNull()
+        val waistValue = waist.toDoubleOrNull()
+        val neckValue = neck.toDoubleOrNull()
+        val hipValue = hip.toDoubleOrNull() // pode ser null para homens
 
-        val isHeightInvalid = heightValue == null || heightValue <= 0
-        val isWeightInvalid = weightValue == null || weightValue <= 0
-        val isAgeInvalid = ageValue == null || ageValue <= 0
+        val isHeightInvalid = h == null || h <= 0
+        val isWeightInvalid = w == null || w <= 0
+        val isAgeInvalid = a == null || a <= 0
         val isGenderInvalid = gender == null
         val isActivityLevelInvalid = activityLevel == null
+        val isWaistInvalid = waistValue == null || waistValue <= 0
+        val isNeckInvalid = neckValue == null || neckValue <= 0
+        val isHipInvalid = gender == Gender.FEMALE && hipValue == null
 
         validationState = ValidationState(
             heightError = isHeightInvalid,
@@ -94,28 +81,35 @@ class HomeViewModel(private val repository: IMCHistoryRepository) : ViewModel() 
             activityLevelError = isActivityLevelInvalid
         )
 
-        val hasError = isHeightInvalid || isWeightInvalid || isAgeInvalid || isGenderInvalid || isActivityLevelInvalid
-        if (hasError) {
-            return
-        }
+        if (isHeightInvalid || isWeightInvalid || isAgeInvalid || isGenderInvalid || isActivityLevelInvalid || isWaistInvalid || isNeckInvalid || isHipInvalid) return
 
-        // Como todos os campos foram validados, podemos usar os valores não nulos com segurança.
-        val validatedHeight = heightValue!!
-        val validatedWeight = weightValue!!
-        val validatedAge = ageValue!!
+        // Valores validados
+        val validatedHeight = h!!
+        val validatedWeight = w!!
+        val validatedAge = a!!
         val validatedGender = gender!!
         val validatedActivityLevel = activityLevel!!
 
+        // Calcula IMC
         Calculations.calculateIMC(height = height, weight = weight) { imcResult ->
 
             val bmr = Calculations.calculateBMR(validatedWeight, validatedHeight, validatedAge, validatedGender)
             val idealWeight = Calculations.calculateIdealWeight(validatedHeight, validatedGender)
             val dailyCaloricNeed = Calculations.calculateDailyCaloricNeed(bmr, validatedActivityLevel)
 
+            val bodyFat = Calculations.calculateBodyFat(
+                gender = validatedGender,
+                height = validatedHeight,
+                waist = waistValue!!,
+                neck = neckValue!!,
+                hip = hipValue
+            )
+
             val finalResult = imcResult.copy(
                 bmr = bmr,
                 idealWeight = idealWeight,
-                dailyCaloricNeed = dailyCaloricNeed
+                dailyCaloricNeed = dailyCaloricNeed,
+                bodyFat = bodyFat
             )
 
             resultIMC = finalResult
@@ -134,7 +128,8 @@ class HomeViewModel(private val repository: IMCHistoryRepository) : ViewModel() 
             gender = gender,
             bmr = result.bmr,
             idealWeight = result.idealWeight,
-            dailyCaloricNeed = result.dailyCaloricNeed
+            dailyCaloricNeed = result.dailyCaloricNeed,
+            bodyFat = result.bodyFat
         )
         repository.insertHistory(history)
     }
