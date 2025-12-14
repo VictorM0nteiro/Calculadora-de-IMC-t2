@@ -28,15 +28,18 @@ NCD = TMB × Fator de Atividade
 ```kotlin
 @Entity(tableName = "imc_history")
 data class IMCHistory(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val date: LocalDateTime,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val date: Date,
     val weight: Double,
-    val height: Double,
+    val height: Int,
     val imc: Double,
-    val classification: String,
-    val tmb: Double,
-    val dailyCalories: Double,
-    val idealWeight: Double
+    val imcClassification: String,
+    val age: Int,
+    val gender: Gender?,
+    val bmr: Int?,
+    val idealWeight: String?,
+    val dailyCaloricNeed: Int?
 )
 ```
 
@@ -44,8 +47,6 @@ data class IMCHistory(
 
 A persistência foi implementada utilizando:
 - **Room** como camada de abstração sobre SQLite
-- **DataStore** para preferências do usuário
-- **TypeConverters** para tipos complexos
 - **Repository pattern** para abstrair a fonte de dados
 
 ## Melhorias Futuras

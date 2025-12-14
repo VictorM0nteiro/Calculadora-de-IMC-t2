@@ -14,7 +14,7 @@ Aplicativo Android desenvolvido em Kotlin com Jetpack Compose para cálculo de I
 ## 🏗️ Arquitetura
 
 - **MVVM** (Model-View-ViewModel)
-- **Injeção de Dependências** com Hilt
+- **Injeção de Dependências** com Koin
 - **Room** para persistência local
 - **Jetpack Compose** para UI
 - **StateFlow** para gerenciamento de estado
@@ -31,15 +31,11 @@ Aplicativo Android desenvolvido em Kotlin com Jetpack Compose para cálculo de I
 - AndroidX Core
 - Jetpack Compose
 - Room
-- Hilt
-- MPAndroidChart
+- Koin
+- Vico
 - Material3
 - Navigation Component
 
 ## 📄 Documentação
 
 Consulte a [documentação técnica](./docs/documentacao_tecnica.md) para mais detalhes sobre as fórmulas e implementação.
-
-## 📊 Apresentação
-
-Acesse o [guia da apresentação](./docs/apresentacao.md) para ver os slides e tópicos que serão abordados.
