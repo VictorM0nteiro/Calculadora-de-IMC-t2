@@ -39,3 +39,6 @@ Aplicativo Android desenvolvido em Kotlin com Jetpack Compose para cálculo de I
 ## 📄 Documentação
 
 Consulte a [documentação técnica](./docs/documentacao_tecnica.md) para mais detalhes sobre as fórmulas e implementação.
+
+## apresentação a ser feita
+Acesse o [guia da apresentação](./docs/apresentacao.md) para ver os slides e tópicos que serão abordados.
