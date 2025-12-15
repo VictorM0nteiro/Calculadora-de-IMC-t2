@@ -1,32 +1,29 @@
-# Apresentação - Calculadora de IMC
+# Apresentação - Health Monitor
 
 ## Slide 1: Visão Geral
-- **Título**: Calculadora de IMC e Métricas de Saúde
-- **Desenvolvido por**: Matheus Nascimento Leite e Luccas Asaphe Pena Salomão
-- **Tecnologias**: Kotlin, Jetpack Compose, Room, Hilt
+- **Título**: Health Monitor - Calculadora de IMC e Métricas de Saúde
+- **Desenvolvido por**: Victor Hugo Monteiro da Silva e Murilo de Melo
+- **Tecnologias**: Kotlin, Jetpack Compose, Room, MVVM
 
 ## Slide 2: Funcionalidades Principais
 - Cálculo de IMC com classificação
 - Taxa Metabólica Basal (TMB)
 - Necessidade calórica diária
-- Histórico e gráficos
-- Interface moderna e responsiva
+- Percentual de Gordura Corporal (US Navy)
+- Peso Ideal
+- Histórico com gráficos de evolução
+- Tema claro/escuro
 
 ## Slide 3: Dificuldades Encontradas
-- Gerenciamento de estado assíncrono
-- Persistência de dados complexos
-- Cálculos precisos das métricas de saúde
-- Testes de UI com Compose
+- Implementação correta das fórmulas matemáticas (logaritmos, validações)
+- Gerenciamento de estado com Compose + Flow
+- Validação condicional de campos (quadril apenas para mulheres)
+- Tratamento de erros para evitar NaN e valores negativos
 
 ## Slide 4: Uso de LLMs
-- **Ferramentas utilizadas**:
-  - GitHub Copilot
-  - ChatGPT-4
-- **Exemplos de prompts**:
-  - "Como implementar Room com Kotlin Flow?"
-  - "Melhor forma de validar campos de formulário no Jetpack Compose"
-- **Avaliação**:
-  - Ajuda valiosa para acelerar o desenvolvimento
-  - Bom para gerar código boilerplate
-  - Requer revisão cuidadosa do código gerado
-  - Excelente para documentação
+- **Ferramentas**: Claude Opus 4.5, Gemini 3.0 PRO, ChatGPT-5
+- **Destaques**:
+    - Cálculo de Gordura Corporal (Gemini)
+    - Função de IMC com classificações (Claude)
+    - Temas e Design System (Gemini)
+- **Avaliação**: Acelera desenvolvimento, bom para boilerplate, requer revisão
